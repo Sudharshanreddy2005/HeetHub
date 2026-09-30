@@ -1,0 +1,55 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DATABASE: ai_secure_meeting
+      FRONTEND_ORIGINS: http://localhost:5173
+      JWT_SECRET: ${JWT_SECRET:-}
+      LIVEKIT_API_KEY: ${LIVEKIT_API_KEY:-}
+      LIVEKIT_API_SECRET: ${LIVEKIT_API_SECRET:-}
+      LIVEKIT_URL: ${LIVEKIT_URL:-}
+      LIVEKIT_TOKEN_TTL_MINUTES: ${LIVEKIT_TOKEN_TTL_MINUTES:-10}
+      TOXICITY_WARNING_THRESHOLD: ${TOXICITY_WARNING_THRESHOLD:-0.5}
+      TOXICITY_BLOCK_THRESHOLD: ${TOXICITY_BLOCK_THRESHOLD:-0.8}
+      TOXICITY_MODEL_ENABLED: ${TOXICITY_MODEL_ENABLED:-true}
+      VOICE_MODERATION_ENABLED: ${VOICE_MODERATION_ENABLED:-true}
+      VOICE_TRANSCRIPT_MAX_LENGTH: ${VOICE_TRANSCRIPT_MAX_LENGTH:-2000}
+      VOICE_RATE_LIMIT_PER_MINUTE: ${VOICE_RATE_LIMIT_PER_MINUTE:-12}
+      VOICE_TOXICITY_WARNING_THRESHOLD: ${VOICE_TOXICITY_WARNING_THRESHOLD:-0.5}
+      VOICE_TOXICITY_BLOCK_THRESHOLD: ${VOICE_TOXICITY_BLOCK_THRESHOLD:-0.8}
+      ENGAGEMENT_ALERT_THRESHOLD: ${ENGAGEMENT_ALERT_THRESHOLD:-0.5}
+      ENGAGEMENT_ALERT_DURATION_SECONDS: ${ENGAGEMENT_ALERT_DURATION_SECONDS:-30}
+      ENGAGEMENT_ALERT_COOLDOWN_SECONDS: ${ENGAGEMENT_ALERT_COOLDOWN_SECONDS:-300}
+      ENGAGEMENT_METRIC_STALE_SECONDS: ${ENGAGEMENT_METRIC_STALE_SECONDS:-15}
+    ports:
+      - "8000:8000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      VITE_API_PROXY_TARGET: http://backend:8000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+  mongodb:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongodb_data:

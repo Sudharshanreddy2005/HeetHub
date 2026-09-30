@@ -1,0 +1,45 @@
+Read and follow .clinerules first.
+
+Then read and understand:
+AGENTS.md
+PROJECT_PLAN.md
+ARCHITECTURE.md
+API.md
+SECURITY.md
+PRIVACY.md
+AI_MODEL.md
+README.md
+
+Review the existing New Zoom project completely.
+
+Do not modify any files yet.
+
+Verify the actual implementation status of Phase 1 through Phase 7 from the source code, tests, and documentation.
+
+Then specifically review Phase 7 and determine whether it is actually complete.
+
+After that, prepare a detailed implementation plan for Phase 8: Voice Moderation.
+
+For Phase 8, analyze:
+1. Current LiveKit audio architecture
+2. How audio can be processed safely
+3. Speech to text options
+4. Voice toxicity detection
+5. Participant identification
+6. Privacy requirements
+7. Security requirements
+8. MongoDB changes
+9. Backend changes
+10. Frontend changes
+11. Required dependencies
+12. Docker changes
+13. Testing strategy
+14. External services and credentials required
+
+Do not implement Phase 8 yet.
+
+Do not start Phase 9.
+
+Do not modify existing working functionality.
+
+Wait for my approval after presenting the plan.
